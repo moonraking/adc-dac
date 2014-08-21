@@ -1,5 +1,5 @@
 { 
   "name" : "adc-dac",
-  "main" : "adc-dac.js"
-  
+  "main" : "adc-dac.js",
+  "version": "0.1"
 }
