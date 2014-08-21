@@ -6,7 +6,7 @@ A quick library using RussTheAerialist/node-spi to talk to the MCP4821 12bit DAC
 It works...
 
 
----------------------------
+```
 var DAC = require('adc-dac').DAC;
 var ADC = require('adc-dac').ADC;
 
@@ -22,4 +22,4 @@ while(true){
     //wire your pot to channel 1 on the ADC chip and your LED to channel 0 on your
     dac.setVoltage( adc.getVoltage( adc.CHANNEL_0 ) );
 }
----------------------------
+```
