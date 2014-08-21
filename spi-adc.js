@@ -1,7 +1,6 @@
 var SPI = require('spi');
 
 
-
 function ADC(device, referenceVoltage) {
 
     this.referenceVoltage = referenceVoltage;
@@ -14,16 +13,16 @@ function ADC(device, referenceVoltage) {
 
 };
 
-ADC.prototype.CHANNEL_1 = 1;
-ADC.prototype.CHANNEL_2 = 2;
+ADC.prototype.CHANNEL_0 = 1;
+ADC.prototype.CHANNEL_1 = 2;
 
 //based on the MCP3202 12bit ADC chip
-//chanel is 1 or 2
+//chanel is 0 or 1
 ADC.prototype.getRawValue = function( channel ) {
 
     var txBuffer = new Buffer([
         0x01, // start bit
-        (1+channel)<<6, // MSB first
+        (1+channel)<<6, // MSB first, and chanel selection
         0 //some padding cause we can only read as we write cause the clock has to run
     ]);
 
@@ -33,7 +32,6 @@ ADC.prototype.getRawValue = function( channel ) {
         var s = "";
         for (var i=0; i < outBuffer.length; i++)
             s = s + outBuffer[i] + " ";
-      //  console.log(s + "\n");
     });
     //console.log(rxBuffer);
     return ((rxBuffer[1]&0x0F) << 8) + (rxBuffer[2]);

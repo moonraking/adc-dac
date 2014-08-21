@@ -1,5 +1,8 @@
 { 
   "name" : "adc-dac",
   "main" : "adc-dac.js",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "dependencies": {
+    "spi": "0.1.2"
+  }
 }

@@ -21,7 +21,7 @@ function DAC(device, referenceVoltage) {
 //based on the MCP4822 12bit DAC chip, also MCP4921
 DAC.prototype.setRawValue = function( value ) {
     //write out the raw value
-    var channel = 1;
+    var channel = 1; // the MSP4921 only has one channel
     this.currentValue = value;
     this.currentVoltage = this.valueToVoltage( value );
     var lowByte = value & 0xff;
