@@ -4,18 +4,17 @@ var SPI = require('spi');
 function DAC(device, referenceVoltage) {
 
     this.referenceVoltage = referenceVoltage;
-    this.device = new SPI.Spi();
-    
-    this.currentValue = 0;
-    this.currentVoltage = this.voltageToValue( this.currentValue );
-
-    this.device.open(device, {
+    this.device = new SPI.Spi({
         "mode": SPI.MODE[0],
         "chipSelect": SPI.CS['low'],
         "maxSpeed": 1000000
     });
+    
+    this.currentValue = 0;
+    this.currentVoltage = this.voltageToValue( this.currentValue );
 
 };
+
 
 //based on the MCP4822 12bit DAC chip, also MCP4921
 DAC.prototype.setRawValue = function( value ) {

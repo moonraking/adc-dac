@@ -4,14 +4,13 @@ var SPI = require('spi');
 function ADC(device, referenceVoltage) {
 
     this.referenceVoltage = referenceVoltage;
-    this.device = new SPI.Spi();
+    this.device = new SPI.Spi({
+        "mode": SPI.MODE[0],
+        "chipSelect": SPI.CS['low'],
+        "maxSpeed": 1000000
+    });
     this.currentValue = 0;
     this.currentVoltage = this.voltageToValue( this.currentValue );    
-    // this.device.open(device, {
-    //     "mode": SPI.MODE[0],
-    //     "chipSelect": SPI.CS['low'],
-    //     "maxSpeed": 1000000
-    // });
 
 };
 
