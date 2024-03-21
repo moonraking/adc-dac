@@ -1,39 +1,34 @@
-var SPI = require('spi');
+const spi = require('spi-device');
 
-
-function DAC(device, referenceVoltage) {
+function DAC(bus, device, referenceVoltage) {
 
     this.referenceVoltage = referenceVoltage;
-    this.device = new SPI.Spi(device, {
-        "mode": SPI.MODE['MODE_0'],
-        "chipSelect": SPI.CS['low'],
-        "maxSpeed": 1000000
+
+    this.device = spi.openSync(bus, device, {
+        "maxSpeed": 1000000,
+        "bitsPerWord": 8,
     });
-    this.device.bitsPerWord = 8;
-    this.device.halfDuplex = true;
-    this.device.open();
-    this.currentValue = 0;
-    this.currentVoltage = this.voltageToValue( this.currentValue );
 
-};
-
+    this.currentVoltage = this.voltageToValue(0);
+}
 
 //based on the MCP4822 12bit DAC chip, also MCP4921
 DAC.prototype.setRawValue = function( value ) {
     //write out the raw value
-    var channel = 1; // the MSP4921 only has one channel
-    this.currentValue = value;
-    this.currentVoltage = this.valueToVoltage( value );
-    var lowByte = value & 0xff;
-    var highByte = ((value >> 8) & 0xff) | (channel - 1) << 7 | 0x1 << 5 | 1 << 4;
-    var buffer = new Buffer( [ highByte, lowByte] );
-    this.device.write( buffer );
-};
+    let channel = 1; // the MSP4921 only has one channel
+    this.currentVoltage = this.valueToVoltage(value);
+    let lowByte = value & 0xff;
+    let highByte = ((value >> 8) & 0xff) | (channel - 1) << 7 | 0x1 << 5 | 1 << 4;
 
+    this.device.transferSync([{
+        byteLength: 2,
+        sendBuffer: Buffer.from([highByte, lowByte]),
+    }]);
+};
 
 DAC.prototype.setVoltage = function( voltage ) {
     var val = this.voltageToValue(voltage);
-    return this.setRawValue( val );
+    return this.setRawValue(val);
 }
 
 DAC.prototype.voltageToValue = function( voltage ) {
@@ -46,8 +41,7 @@ DAC.prototype.valueToVoltage = function( value ) {
 }
 
 DAC.prototype.close = function() {
-    this.device.close();
+    this.device.closeSync();
 }
-
 
 module.exports.DAC = DAC;
